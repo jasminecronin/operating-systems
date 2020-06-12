@@ -89,8 +89,6 @@ int checkConsistency( int blockSize, std::vector<DEntry> & files, std::vector<in
 		int result = blocksExpected - blocksActual;
 		if (result > 0 ) files[i].tooFewBlocks = true;
 		else if (result < 0) files[i].tooManyBlocks = true;
-		//cout << "File " << i << ":";
-		//cout << "Expected blocks: " << blocksExpected << " Actual blocks: " << blocksActual << endl;
 	}
 	
 	return fat.size() - usedBlocks.size();
@@ -121,15 +119,11 @@ int main()
         }
         // read in the FAT
         std::vector<int> fat( fatSize);
-	//cout << fatSize << endl;
         for( int i = 0 ; i < fatSize ; i ++ ) {
             if( 1 != scanf( "%d", & fat[i])) 
 		    throw "could not read FAT entry";
-		    //break;
-	    //cout << fat[i] << endl;
             if( fat[i] < -1 || fat[i] >= fatSize) throw "bad FAT entry";
         }
-	//for (auto a : fat) cout << a << " ";
 
         // run the consistency check
         int nFreeBlocks = checkConsistency( blockSize, entries, fat);
