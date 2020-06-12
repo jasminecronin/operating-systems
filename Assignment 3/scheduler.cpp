@@ -32,7 +32,7 @@ struct process {
 	bool added = false;
 };
 
-int totaltime = 0; // Add up total time to run here, run loop until this hits zero?
+int totaltime = 0;
 vector <process> processes;
 queue <process> readyqueue;
 vector <process> sjqueue;
@@ -50,7 +50,6 @@ void roundrobin(int s) {
 	int active;
 	for (int time = 0; time < totaltime; time++) {
 		// Check if any process has arrived
-		// cout << "next: " << next << endl;
 		if (next < processes.size() && time == processes.at(next).arrival) {
 			readyqueue.push(processes.at(next));
 			processes.at(next).added = true;
@@ -62,7 +61,6 @@ void roundrobin(int s) {
 		}
 		
 		active = readyqueue.front().id; // Get first item id from queue
-		//cout << "active: " << active << " time left: " << processes.at(active).burst << endl;
 		if (!processes.at(active).started) {
 			processes.at(active).started = true;
 			processes.at(active).start = time;
@@ -82,9 +80,6 @@ void roundrobin(int s) {
 			readyqueue.pop();
 			slice = s;
 		}
-
-		//active = readyqueue.front().id;
-		//printStatuses(active, time);
 	}
 	printTrailer();
 }
@@ -171,7 +166,6 @@ void printTrailer() {
 		int wait = (processes[i].end - processes[i].arrival) - processes[i].length;
 		total += wait;
 		cout << processes[i].name << "\t" << "waited " << wait << " sec." << endl;
-//		printf("%s\twaited %.3f sec.\n", processes[i].name, wait);
 	}
 	float average = (float) total / (float) processes.size();
 	printf("Average waiting time = %.3f sec.\n", average);
@@ -189,7 +183,7 @@ int main(int argc, char * const argv[]) {
 		filename = argv[1];
 		alg = argv[2];
 		if (argc == 4)
-			slice = stoi(argv[3]); // TODO error checking here to ensure arg is a positive number
+			slice = stoi(argv[3]);
 	}
 
 	int fd = open(filename.c_str(), O_RDONLY);
