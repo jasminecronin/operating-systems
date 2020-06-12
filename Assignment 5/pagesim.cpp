@@ -25,12 +25,7 @@ void clockReplacement();
 int main(int argc, char ** argv) {
 	int availablePages;
 	availablePages = atoi(argv[1]);
-	// cout << availablePages << endl;
 	
-	//vector<int> referenceString;
-	//cout << "Reference String created" << endl;
-	//int pageTable[availablePages] = {0};
-	//cout << "Page table created" << endl;
 	for (int i = 0; i < availablePages; i++) {
 		pageTable.push_back(-1);
 	}
@@ -38,29 +33,15 @@ int main(int argc, char ** argv) {
 	while (1) {
 		int num;
 		if (1 != scanf("%ld", & num)) break;
-		//cout << "Attempting to push back" << endl;
 		referenceString.push_back(num);
-		//cout << "Push back successful" << endl;
 	}
-
-	//for (int n : referenceString) {
-		//cout << n << " ";
-	//}
-	//cout << endl;
 	
 	optimalReplacement();
-	//cout << "Optimal finished" << endl;
 	lruReplacement();
-	//cout << "LRU finished" << endl;
 	clockReplacement();
-	//cout << "Clock finished" << endl;
 }
 
 void optimalReplacement() {
-	//cout << "Optimal called" << endl;
-	//pageTable[0] = 1;
-	//cout << "pTable edited" << endl;
-	//cout << pageTable[0] << endl;
 	
 	pageFaults = 0;
 	bool hit = false;
@@ -99,8 +80,6 @@ void optimalReplacement() {
 					break;
 				}
 			}
-			//for (int frame : pageTable) cout << frame << " ";
-			//cout << endl;
 		}
 	}
 
@@ -114,8 +93,6 @@ void optimalReplacement() {
 }
 
 void lruReplacement() {
-	//cout << "LRU called" << endl;
-	//cout << pageTable[0] << endl;
 	
 	pageFaults = 0;
 	bool hit = false;
@@ -154,8 +131,6 @@ void lruReplacement() {
 					break;
 				}
 			}
-			//for (int frame : pageTable) cout << frame << " ";
-			//cout << endl;
 		}
 	}
 
@@ -170,8 +145,6 @@ void lruReplacement() {
 
 
 void clockReplacement() {
-	//cout << "Clock called" << endl;
-	//cout << pageTable[0] << endl;
 	
 	pageFaults = 0;
 	bool hit = false;
