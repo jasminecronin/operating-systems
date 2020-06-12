@@ -38,17 +38,12 @@ void detectCycles(unordered_map<string, node> &graph) {
 	unordered_set<string> visited;
 	bool cycle = false;
 
-	//cout << "detectCycles entered" << endl;
-
 	// For each node in the graph
 	for (auto& n : graph) {
-		//cout << "Starting from node: " << n.first << endl;
-		//cout << "first for loop entered" << endl;
 		// Only process unvisited nodes
 		if (n.second.visited) continue;
 		// Set all edges as unmarked
 		for (auto& n : graph) {
-			//cout << "clearing all marked edges" << endl;
 			n.second.visitedEdges = n.second.adjacencylist;
 		}
 		
@@ -57,67 +52,35 @@ void detectCycles(unordered_map<string, node> &graph) {
 		visited.clear(); // Clear the set of visited nodes
 
 		path.push(n.second);
-	        n.second.visited = true;	
+	        n.second.visited = true;
+		visited.insert(n.first); // Add to the list of visited nodes
+		while(!path.empty() && !cycle) {
+			node s = path.top();
+			path.pop();
 
-		//if (visited.count(n.first) != 0) { // If we've seen this node before, we have a cycle
-		//	printCycle(visited);
-		//	cout << "Cycle detected when first node added" << endl;
-		//	break;
-		//}
-		//else {
-			visited.insert(n.first); // Add to the list of visited nodes
-			while(!path.empty() && !cycle) {
-				//cout << "DFS while loop entered" << endl;
-				node s = path.top();
-				path.pop();
+			while(s.visitedEdges.size() > 0) {
+				string nextNode = s.visitedEdges.back();
+				s.visitedEdges.pop_back();
 
-				while(s.visitedEdges.size() > 0) {
-					//cout << "pushing unvisited nodes to the stack" << endl;
-					string nextNode = s.visitedEdges.back();
-					s.visitedEdges.pop_back();
-
-					if (graph.at(nextNode).visited) {
-						//cout << "cycle if check made" << endl;
-						cycle = true;
-						//printCycle(visited);
-						//cout << "Cycle detected while checking unmarked edges" << endl;
-						break;
-					}
-					//cout << "nextNode = " << nextNode << endl;
-					//for (auto it = graph.begin(); it != graph.end(); it++) cout << it->first << endl;
-					path.push(graph.at(nextNode));
-					//cout << "accessed graph node, pushed to path" << endl;
-					visited.insert(nextNode);
-					//cout << "node added to list of involved nodes" << endl;
-					graph.at(nextNode).visited = true;
-					//cout << "node marked as visited" << endl;
+				if (graph.at(nextNode).visited) {
+					cycle = true;
+					break;
 				}
-				//if (cycle) {
-				//	printCycle(visited);
-				//	cycle = false;
-				//	break;
-				//}
+				path.push(graph.at(nextNode));
+				visited.insert(nextNode);
+				graph.at(nextNode).visited = true;
 			}
-			if (cycle) {
-			       printCycle(visited);
-			       cycle = false;
-			       break;
-			}
-		//}
+		}
+		if (cycle) {
+		       printCycle(visited);
+		       cycle = false;
+		       break;
+		}
 	}
 }
 
 void printCycle(unordered_set<string> visited) {
-	// for every string in this list
-	// if it ends in an R, skip
-	// else, add as int to a sortable list
-	// sort the list
-	// do the printing
-	//cout << "Cycle detected" << endl;
-	//cout << "involved nodes ";
-	//for (auto c : visited) cout << c << " ";
-	//cout << endl;
-
+	
 	vector<int> cycle;
 	for (auto key : visited) {
 		if (key.back() == 'R') continue;
@@ -144,11 +107,7 @@ int main(int argc, char ** argv) {
 			string line;
 			getline(cin, line);
 			if (cin.eof() || line[0] == '#') {
-				//for (auto it = graph.begin(); it != graph.end(); it++) cout << it->first << endl;
 				detectCycles(graph);
-				//for (auto& x: graph) {
-				//	cout << x.first << ": " << x.second.adjacencylist[0] << endl;
-				//}
 				break;
 			}
 			else {
@@ -157,19 +116,15 @@ int main(int argc, char ** argv) {
 				string item;
 				while (getline(ss, item, ' ')) {
 					*(back_inserter(words)++) = item;
-					//cout << item << endl;
 				}
-				//cout << line << endl;
 				words[2] += "R"; // mark the resource key as such
 
 				if (words[1].compare("->") == 0) {
 					if (graph.count(words[0]) == 0) {
-						//cout << "Added process key: " << words[0] << endl;
 						node n;
 						graph.insert({words[0], n});		
 					}
 					if (graph.count(words[2]) == 0) {
-						//cout << "Added resource key: " << words[2] << endl;
 						node n;
 						graph.insert({words[0], n});
 					}
@@ -177,12 +132,10 @@ int main(int argc, char ** argv) {
 				}
 				else {
 					if (graph.count(words[2]) == 0) {
-						//cout << "Added resource key: " << words[2] << endl;
 						node n;
 						graph.insert({words[2], n});
 					}
 					if (graph.count(words[0]) == 0) {
-						//cout << "Added process key: " << words[0] << endl;
 						node n;
 						graph.insert({words[0], n});
 					}
